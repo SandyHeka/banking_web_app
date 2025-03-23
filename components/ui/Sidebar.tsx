@@ -44,7 +44,7 @@ export default function Sidebar({ user }: SiderbarProps) {
               </div>
               <p
                 className={cn("sidebar-label", {
-                  "!text-white": isActive,
+                  "text-white": isActive,
                 })}
               >
                 {items.label}
