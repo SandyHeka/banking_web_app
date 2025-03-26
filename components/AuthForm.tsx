@@ -11,8 +11,11 @@ import { authFormSchema } from "@/lib/utils";
 import { Form } from "./ui/form";
 import { Button } from "./ui/button";
 import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { signIn, signUp } from "@/lib/actions/user.actions";
 
 export default function AuthForm({ type }: { type: string }) {
+  const router = useRouter();
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const formSchema = authFormSchema(type);
@@ -23,13 +26,33 @@ export default function AuthForm({ type }: { type: string }) {
       password: "",
     },
   });
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
+
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setIsLoading(true);
-    console.log(values);
-    setIsLoading(false);
-  }
+    try {
+      if (type === "sign-up") {
+        const newUser = await signUp(data);
+        setUser(newUser);
+      }
+      if (type === "sign-in") {
+        const newUser = await signUp(data);
+        setUser(newUser);
+        // const response = await signIn({
+        //   email: data.email,
+        //   password: data.password,
+        // });
+        // if (response) router.push("/");
+        // router.push("/");
+      }
+
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <section className="auth-form">
       <header className="flex flex-col gap-5 md:gap:8">
@@ -82,6 +105,12 @@ export default function AuthForm({ type }: { type: string }) {
                     label="Address"
                     name="address1"
                     placeholder="Please provide your address"
+                  />
+                  <CustomInput
+                    control={form.control}
+                    label="City"
+                    name="city"
+                    placeholder="Please provide your city"
                   />
                   <div className="flex gap-4">
                     <div className="w-full">
@@ -156,7 +185,7 @@ export default function AuthForm({ type }: { type: string }) {
                 : "Already have an account? "}
             </p>
             <Link
-              href={type === "sign-in" ? "/sign-up" : "/sing-in"}
+              href={type === "sign-in" ? "/sign-up" : "/sign-in"}
               className="form-link"
             >
               {type === "sign-in" ? "Sign up" : "Sign in"}
