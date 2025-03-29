@@ -13,6 +13,7 @@ import { Button } from "./ui/button";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { getLoggedInUser, signIn, signUp } from "@/lib/actions/user.actions";
+import PlaidLink from "./PlaidLink";
 
 export default function AuthForm({ type }: { type: string }) {
   const router = useRouter();
@@ -32,7 +33,19 @@ export default function AuthForm({ type }: { type: string }) {
     setIsLoading(true);
     try {
       if (type === "sign-up") {
-        const newUser = await signUp(data);
+        const userData = {
+          firstName: data.firstName!,
+          lastName: data.lastName!,
+          address1: data.address1!,
+          city: data.city!,
+          state: data.state!,
+          postalCode: data.postalCode!,
+          dateOfBirth: data.dateOfBirth!,
+          ssn: data.ssn!,
+          email: data.email,
+          password: data.password,
+        };
+        const newUser = await signUp(userData);
         setUser(newUser);
       }
       if (type === "sign-in") {
@@ -71,126 +84,128 @@ export default function AuthForm({ type }: { type: string }) {
           </p>
         </div>
       </header>
-      {user ? (
-        <div className=" flex flex-col gap-4">{}</div>
-      ) : (
-        <>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-              {type === "sign-up" && (
-                <>
-                  <div className="flex gap-4">
-                    <div className="w-full">
-                      <CustomInput
-                        control={form.control}
-                        label="First Name"
-                        name="firstName"
-                        placeholder="Please provide your First Name"
-                      />
-                    </div>
-                    <div className="w-full">
-                      <CustomInput
-                        control={form.control}
-                        label="Last Name"
-                        name="lastName"
-                        placeholder="Please provide your Last Name"
-                      />
-                    </div>
+      {/* {user ? ( */}
+      <div className=" flex flex-col gap-4">
+        <PlaidLink user={user} variant="primary" />
+      </div>
+      {/* ) : ( */}
+      <>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            {type === "sign-up" && (
+              <>
+                <div className="flex gap-4">
+                  <div className="w-full">
+                    <CustomInput
+                      control={form.control}
+                      label="First Name"
+                      name="firstName"
+                      placeholder="Please provide your First Name"
+                    />
                   </div>
+                  <div className="w-full">
+                    <CustomInput
+                      control={form.control}
+                      label="Last Name"
+                      name="lastName"
+                      placeholder="Please provide your Last Name"
+                    />
+                  </div>
+                </div>
 
-                  <CustomInput
-                    control={form.control}
-                    label="Address"
-                    name="address1"
-                    placeholder="Please provide your address"
-                  />
-                  <CustomInput
-                    control={form.control}
-                    label="City"
-                    name="city"
-                    placeholder="Please provide your city"
-                  />
-                  <div className="flex gap-4">
-                    <div className="w-full">
-                      <CustomInput
-                        control={form.control}
-                        label="State"
-                        name="state"
-                        placeholder="Example: VIC"
-                      />
-                    </div>
-                    <div className="w-full">
-                      <CustomInput
-                        control={form.control}
-                        label="Postal Code"
-                        name="postalCode"
-                        placeholder="Example: 3280"
-                      />
-                    </div>
+                <CustomInput
+                  control={form.control}
+                  label="Address"
+                  name="address1"
+                  placeholder="Please provide your address"
+                />
+                <CustomInput
+                  control={form.control}
+                  label="City"
+                  name="city"
+                  placeholder="Please provide your city"
+                />
+                <div className="flex gap-4">
+                  <div className="w-full">
+                    <CustomInput
+                      control={form.control}
+                      label="State"
+                      name="state"
+                      placeholder="Example: VIC"
+                    />
                   </div>
-                  <div className="flex gap-4 ">
-                    <div className="w-full">
-                      <CustomInput
-                        control={form.control}
-                        label="DOB"
-                        name="dateOfBirth"
-                        placeholder="YYYY-MM-DD"
-                      />
-                    </div>
-                    <div className="w-full">
-                      <CustomInput
-                        control={form.control}
-                        label="SSN"
-                        name="ssn"
-                        placeholder="Example:4329"
-                      />
-                    </div>
+                  <div className="w-full">
+                    <CustomInput
+                      control={form.control}
+                      label="Postal Code"
+                      name="postalCode"
+                      placeholder="Example: 3280"
+                    />
                   </div>
-                </>
-              )}
-              <CustomInput
-                control={form.control}
-                label="E-mail"
-                name="email"
-                placeholder="Please provide your Email"
-              />
-              <CustomInput
-                control={form.control}
-                label="Password"
-                name="password"
-                placeholder="Please provide your Password"
-              />
-              <div className="flex flex-col gap-4">
-                <Button className="form-btn" type="submit" disabled={isLoading}>
-                  {isLoading ? (
-                    <>
-                      <Loader2 size={20} className="animate-spin" /> &nbsp;
-                      Loading...
-                    </>
-                  ) : type === "sign-in" ? (
-                    "Sign In"
-                  ) : (
-                    "Sign Up"
-                  )}
-                </Button>
-              </div>
-            </form>
-          </Form>
-          <footer className="flex justify-center gap-1">
-            <p className="text-14 font-normal text-gray-600">
-              {type === "sign-in"
-                ? "Don't have an account?"
-                : "Already have an account? "}
-            </p>
-            <Link
-              href={type === "sign-in" ? "/sign-up" : "/sign-in"}
-              className="form-link"
-            >
-              {type === "sign-in" ? "Sign up" : "Sign in"}
-            </Link>
-          </footer>
-        </>
-      )}
+                </div>
+                <div className="flex gap-4 ">
+                  <div className="w-full">
+                    <CustomInput
+                      control={form.control}
+                      label="DOB"
+                      name="dateOfBirth"
+                      placeholder="YYYY-MM-DD"
+                    />
+                  </div>
+                  <div className="w-full">
+                    <CustomInput
+                      control={form.control}
+                      label="SSN"
+                      name="ssn"
+                      placeholder="Example:4329"
+                    />
+                  </div>
+                </div>
+              </>
+            )}
+            <CustomInput
+              control={form.control}
+              label="E-mail"
+              name="email"
+              placeholder="Please provide your Email"
+            />
+            <CustomInput
+              control={form.control}
+              label="Password"
+              name="password"
+              placeholder="Please provide your Password"
+            />
+            <div className="flex flex-col gap-4">
+              <Button className="form-btn" type="submit" disabled={isLoading}>
+                {isLoading ? (
+                  <>
+                    <Loader2 size={20} className="animate-spin" /> &nbsp;
+                    Loading...
+                  </>
+                ) : type === "sign-in" ? (
+                  "Sign In"
+                ) : (
+                  "Sign Up"
+                )}
+              </Button>
+            </div>
+          </form>
+        </Form>
+        <footer className="flex justify-center gap-1">
+          <p className="text-14 font-normal text-gray-600">
+            {type === "sign-in"
+              ? "Don't have an account?"
+              : "Already have an account? "}
+          </p>
+          <Link
+            href={type === "sign-in" ? "/sign-up" : "/sign-in"}
+            className="form-link"
+          >
+            {type === "sign-in" ? "Sign up" : "Sign in"}
+          </Link>
+        </footer>
+      </>
+      {/* )} */}
     </section>
   );
 }
