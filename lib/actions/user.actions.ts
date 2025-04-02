@@ -122,7 +122,7 @@ export const createBankAccount = async ({
   accountId,
   accessToken,
   fundingSourceUrl,
-  sharableId,
+  shareableId,
 }: createBankAccountProps) => {
   try {
     const { database } = await createAdminClient();
@@ -130,10 +130,19 @@ export const createBankAccount = async ({
       DATABASE_ID!,
       BANK_COLLECTION_ID!,
       ID.unique(),
-      { userId, bankId, accountId, accessToken, fundingSourceUrl, sharableId }
+      {
+        userId,
+        bankId,
+        accountId,
+        accessToken,
+        fundingSourceUrl,
+        shareableId,
+      }
     );
     return parseStringify(bankAccount);
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 };
 export const exchangePublicToken = async ({
   publicToken,
@@ -175,7 +184,7 @@ export const exchangePublicToken = async ({
       accountId: accountData.account_id,
       accessToken,
       fundingSourceUrl,
-      sharableId: encryptId(accountData.account_id),
+      shareableId: encryptId(accountData.account_id),
     });
     revalidatePath("/");
     return parseStringify({
