@@ -46,7 +46,7 @@ export default async function TransactionHistory({
           </div>
         </div>
         <section className="flex w-full flex-col gap-6">
-          {/* <TransactionTable transactions={account?.transactions} /> */}
+          <TransactionTable transactions={account?.transactions} />
         </section>
       </div>
     </div>
