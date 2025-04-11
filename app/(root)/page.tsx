@@ -9,6 +9,11 @@ import RecentTransaztions from "@/components/RecentTransaztions";
 const Home = async ({ searchParams: { id, page } }: SearchParamProps) => {
   const currentPage = Number(page as string) || 1;
   const loggedIn = await getLoggedInUser();
+
+  // if (!loggedIn) {
+  //   redirect("/sign-in"); // 👈 Redirect to sign-in page if not logged in
+  // }
+
   const accounts = await getAccounts({
     userId: loggedIn.$id,
   });
